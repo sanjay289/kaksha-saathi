@@ -93,6 +93,7 @@ footer a{color:#184e48}
       <li><b>इंस्टॉल</b> दबाएँ। अब होम स्क्रीन पर ऐप खोलकर पढ़ाई शुरू करें!</li>
     </ol>
     <div class="note">Play Protect “अनजान डेवलपर” बता सकता है क्योंकि ये ऐप Play Store से नहीं हैं। ऐप कोई अनुमति (कैमरा, संपर्क, लोकेशन) नहीं माँगते और कोई निजी जानकारी नहीं लेते।</div>
+    <p class="sub" style="margin-top:12px">सभी ऐप एक जगह: <a href="https://github.com/sanjay289/kaksha-saathi/releases/latest" rel="noopener">GitHub Releases</a>। डाउनलोड न हो तो <a href="apk/">दूसरा लिंक</a> आज़माएँ।</p>
   </section>
 
   <section>
@@ -131,7 +132,8 @@ const apps=[
   {name:'कक्षा 3–5 साथी',tag:'कक्षा 3, 4, 5 एक साथ',desc:'तीनों कक्षाएँ एक ही ऐप में – भाई-बहनों के लिए बढ़िया।',file:'class-3-4-5-all-subjects.apk',size:34,color:'#7A5BD1'},
   {name:'कक्षा 9–10 साथी',tag:'कक्षा 9 और 10 एक साथ',desc:'दोनों कक्षाएँ एक ही ऐप में।',file:'class-9-10-all-subjects.apk',size:32,color:'#7A5BD1'}
 ];
-const card=a=>`<article class="card" style="--c:${a.color};--t:${a.color}1f"><span class="tag">${a.tag}</span><h3>${a.name}</h3><p>${a.desc}</p><small>APK · ${a.size} KB · Android 6+</small><div class="actions"><a class="btn green" href="apk/${a.file}" download>⬇ डाउनलोड</a>${a.grade?`<a class="btn light" href="${a.learn||'learn/?grade='+a.grade}">📖 ऑनलाइन</a>`:''}</div></article>`;
+const REL='https://github.com/sanjay289/kaksha-saathi/releases/download/v1.0/';
+const card=a=>`<article class="card" style="--c:${a.color};--t:${a.color}1f"><span class="tag">${a.tag}</span><h3>${a.name}</h3><p>${a.desc}</p><small>APK · ${a.size} KB · Android 6+</small><div class="actions"><a class="btn green" href="${REL}${a.file}">⬇ डाउनलोड</a>${a.grade?`<a class="btn light" href="${a.learn||'learn/?grade='+a.grade}">📖 ऑनलाइन</a>`:''}</div></article>`;
 document.getElementById('appGrid').innerHTML=apps.map(card).join('');
 document.getElementById('learnGrid').innerHTML=apps.filter(a=>a.grade).map(a=>`<article class="card" style="--c:${a.color};--t:${a.color}1f"><span class="tag">${a.tag}</span><h3>कक्षा ${a.grade}</h3><p>${a.desc}</p><div class="actions"><a class="btn green" href="${a.learn||'learn/?grade='+a.grade}">पढ़ना शुरू करें ›</a></div></article>`).join('');
 const url=location.href.split('#')[0];
