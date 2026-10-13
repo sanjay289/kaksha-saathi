@@ -56,7 +56,7 @@
     const dots=T.qs.map((_,k)=>`<button aria-label="प्रश्न ${k+1}" onclick="boardGo(${k})" style="width:30px;height:30px;border-radius:50%;border:1px solid ${k===T.i?'#184e48':'#cadccf'};background:${T.ans[k]>=0?'#184e48':'#fff'};color:${T.ans[k]>=0?'#fff':'#193e39'};font-size:11px;font-weight:700">${k+1}</button>`).join('');
     return header(T.id==='mixed'?'मॉडल पेपर':sub(T.id).name+' टेस्ट',`${answered}/${T.qs.length} उत्तर दिए`)+`<main style="--accent:${s.color};--tint:${s.color}20">
       <div class="summary"><div><strong id="board-timer">⏱ ${fmt(T.left)}</strong><p>बचा समय</p></div><span class="badge">${esc(s.name)}</span></div>
-      <section class="activity"><h2>प्रश्न ${T.i+1}</h2><p>${esc(x.text)}</p>
+      <section class="activity"><h2>प्रश्न ${T.i+1}</h2><p>${esc(x.text)}</p>${window.sayBtn&&sayAvailable?sayBtn('bq'+T.i,x.text+(x.sid==='english'&&!/[\u0900-\u097F]{2}/.test(x.text)?'. Options: ':'। विकल्प: ')+x.options.map((o,k)=>LETTERS[k]+', '+o).join(x.sid==='english'?'. ':'। ')):''}
       ${x.options.map((o,k)=>`<button class="answer${T.ans[T.i]===k?' correct':''}" onclick="boardPick(${k})"><b>${LETTERS[k]}.</b> ${esc(o)}</button>`).join('')}
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">${T.i>0?'<button class="next" style="background:#e7f0e8;color:#184e48" onclick="boardGo(T_i()-1)">‹ पिछला</button>':''}${T.i<T.qs.length-1?'<button class="next" onclick="boardGo(T_i()+1)">अगला ›</button>':''}<button class="next" style="background:#c0563f" onclick="submitBoardTest(false)">जमा करें ✓</button></div></section>
       <div class="section"><h2>OMR शीट</h2><span>भरे हुए = हरे</span></div><div style="display:flex;flex-wrap:wrap;gap:6px">${dots}</div></main>`;
