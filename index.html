@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#184e48">
+<link rel="manifest" href="manifest.json">
 <title>कक्षा साथी – बिहार के बच्चों के लिए मुफ़्त पढ़ाई ऐप</title>
-<meta name="description" content="नर्सरी से कक्षा 8 तक हिंदी माध्यम के मुफ़्त पढ़ाई ऐप। APK डाउनलोड करें या ऑनलाइन पढ़ें। बिना इंटरनेट चलने वाले पाठ और अभ्यास प्रश्न।">
-<meta property="og:title" content="कक्षा साथी – मुफ़्त पढ़ाई ऐप (नर्सरी से कक्षा 8)">
+<meta name="description" content="नर्सरी से कक्षा 10 तक हिंदी माध्यम के मुफ़्त पढ़ाई ऐप। APK डाउनलोड करें या ऑनलाइन पढ़ें। बिना इंटरनेट चलने वाले पाठ और अभ्यास प्रश्न।">
+<meta property="og:title" content="कक्षा साथी – मुफ़्त पढ़ाई ऐप (नर्सरी से कक्षा 10)">
 <meta property="og:description" content="हिंदी, अंग्रेज़ी, गणित, पर्यावरण, विज्ञान और सामाजिक विज्ञान के छोटे पाठ और अभ्यास। मुफ़्त डाउनलोड।">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect width='96' height='96' rx='20' fill='%23184E48'/><path fill='%23F6C568' d='M17 24c11-5 22-4 31 1 9-5 20-6 31-1v48c-11-5-22-4-31 1-9-5-20-6-31-1z'/></svg>">
 <style>
@@ -78,7 +79,7 @@ footer a{color:#184e48}
 
   <section id="online">
     <h2>ऑनलाइन पढ़ें</h2>
-    <p class="sub">Android नहीं है? कोई बात नहीं। कंप्यूटर, iPhone या किसी भी ब्राउज़र में यही पाठ पढ़ें।</p>
+    <p class="sub">Android नहीं है? कोई बात नहीं। कंप्यूटर, iPhone या किसी भी ब्राउज़र में यही पाठ पढ़ें। एक बार इंटरनेट से खोलने के बाद ये पाठ <b>बिना इंटरनेट भी खुलते हैं</b>। ब्राउज़र मेन्यू में “होम स्क्रीन पर जोड़ें” दबाकर इसे ऐप की तरह रखें।</p>
     <div class="grid" id="learnGrid"></div>
   </section>
 
@@ -136,6 +137,7 @@ document.getElementById('learnGrid').innerHTML=apps.filter(a=>a.grade).map(a=>`<
 const url=location.href.split('#')[0];
 document.getElementById('wa').href='https://wa.me/?text='+encodeURIComponent('बच्चों के लिए मुफ़्त पढ़ाई ऐप (नर्सरी से कक्षा 10, हिंदी में): '+url);
 document.getElementById('copy').onclick=async e=>{try{await navigator.clipboard.writeText(url);e.target.textContent='✓ कॉपी हो गया'}catch(_){prompt('यह लिंक कॉपी करें:',url)}};
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>

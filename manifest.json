@@ -1,0 +1,14 @@
+{
+  "name": "कक्षा साथी – मुफ़्त पढ़ाई",
+  "short_name": "कक्षा साथी",
+  "description": "नर्सरी से कक्षा 10 तक हिंदी माध्यम के पाठ और अभ्यास, बिना इंटरनेट भी।",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8f6ef",
+  "theme_color": "#184e48",
+  "lang": "hi",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
