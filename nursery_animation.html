@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>कक्षा साथी - Nursery Animation</title>
+<style>
+body { margin:0; font-family:sans-serif; background:#FFF8E1; text-align:center; overflow:hidden }
+.slide { position:absolute; width:100%; height:100%; opacity:0; transition: opacity 1s; display:flex; flex-direction:column; align-items:center; justify-content:center; background: linear-gradient(135deg, #FFF9C4, #FFE0B2); }
+.slide.active { opacity:1; }
+.slide img { width:90%; max-width:600px; border-radius:20px; box-shadow:0 8px 20px rgba(0,0,0,0.2); animation: bounce 2s infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+h1 { font-size:42px; color:#1565C0; margin:10px; text-shadow:2px 2px 0 #FFEB3B; }
+button { padding:12px 24px; margin:5px; font-size:18px; border:none; border-radius:30px; background:#FF5722; color:white; }
+.progress { position:fixed; top:0; left:0; height:8px; background:#4CAF50; width:0%; z-index:20 }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div id="slideshow">
+  <div class="slide active"><h1>अ से अनार</h1><img src="images/a-se-anaar.webp"><p>लाल लाल अनार!</p></div>
+  <div class="slide"><h1>आ से आम</h1><img src="images/aa-se-aam.webp"><p>मीठा आम!</p></div>
+  <div class="slide"><h1>इ से इमली</h1><img src="images/e-se-imli.webp"><p>खट्टी इमली!</p></div>
+  <div class="slide"><h1>ई से ईख</h1><img src="images/ee-se-eekh.webp"><p>मीठी ईख!</p></div>
+  <div class="slide"><h1>उ से उल्लू</h1><img src="images/u-se-ullu.webp"><p>रात का उल्लू!</p></div>
+  <div class="slide"><h1>ऊ से ऊन</h1><img src="images/oo-se-oon.webp"><p>गर्म ऊन!</p></div>
+  <div class="slide"><h1>ए से एड़ी</h1><img src="images/e-se-edi.webp"><p>पैर की एड़ी!</p></div>
+  <div class="slide" style="background:#C8E6C9"><h1>🎉 शाबाश! 7 अक्षर सीख लिए!</h1></div>
+</div>
+<div style="position:fixed; bottom:20px; left:0; right:0;">
+  <button onclick="prev()">⬅️ पीछे</button>
+  <button onclick="next()">आगे ➡️</button>
+</div>
+<script>
+let cur=0, slides=document.querySelectorAll('.slide');
+function show(n){ slides.forEach(s=>s.classList.remove('active')); cur=(n+slides.length)%slides.length; slides[cur].classList.add('active'); document.getElementById('progress').style.width=((cur+1)/slides.length*100)+'%'; if('speechSynthesis' in window){ let u=new SpeechSynthesisUtterance(slides[cur].querySelector('h1').innerText); u.lang='hi-IN'; u.rate=0.8; speechSynthesis.cancel(); speechSynthesis.speak(u); } }
+function next(){ show(cur+1) } function prev(){ show(cur-1) }
+setInterval(next,3000);
+</script>
+</body>
+</html>
