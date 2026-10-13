@@ -21,6 +21,8 @@
   <div id="app"></div>
   <script src="config.js"></script>
   <script src="content.js"></script>
+  <script src="board10.js"></script>
+  <script src="board.js"></script>
   <script>
     const app=document.getElementById('app');
     let grade=(g=>GRADES.includes(g)?g:GRADES[0])(Number(new URLSearchParams(location.search).get('grade'))),page='home',subjectId='',lessonIndex=0,query='';
@@ -35,7 +37,7 @@
     const percent=()=>Math.round(finished()/total()*100);
     const style=s=>`--accent:${s.color};--tint:${s.color}20`;
     function head(title,description,back){return `<header class="hero">${back?`<div class="headrow"><button class="back" aria-label="वापस जाएँ" onclick="goBack()">‹</button><h1>${esc(title)}</h1></div>`:`<div class="eyebrow">सीखें • खेलें • आगे बढ़ें</div><h1>${esc(title)}</h1>`}<p>${esc(description)}</p>${!back&&GRADES.length>1?`<div class="grade-switch" aria-label="कक्षा चुनें">${GRADES.map(g=>`<button class="${grade===g?'active':''}" aria-pressed="${grade===g}" onclick="chooseGrade(${g})">कक्षा ${g}</button>`).join('')}</div>`:''}</header>`}
-    function nav(active){return `<nav class="bottom" aria-label="मुख्य मेनू"><button class="${active==='home'?'active':''}" onclick="openHome()"><span>⌂</span>होम</button><button class="${active==='subjects'?'active':''}" onclick="openSubjects()"><span>▦</span>विषय</button><button class="${active==='progress'?'active':''}" onclick="openProgress()"><span>◴</span>प्रगति</button></nav>`}
+    function nav(active){return `<nav class="bottom" aria-label="मुख्य मेनू"><button class="${active==='home'?'active':''}" onclick="openHome()"><span>⌂</span>होम</button><button class="${active==='subjects'?'active':''}" onclick="openSubjects()"><span>▦</span>विषय</button><button class="${active==='progress'?'active':''}" onclick="openProgress()"><span>◴</span>प्रगति</button>${window.boardAvailable&&boardAvailable()?`<button class="${active==='board'?'active':''}" onclick="openBoard()"><span>📝</span>बोर्ड टेस्ट</button>`:''}</nav>`}
     function card(s){let n=count(s);return `<button class="card" style="${style(s)}" onclick="openSubject('${s.id}')"><span class="icon">${esc(s.icon)}</span><strong>${esc(s.name)}</strong><small>${esc(s.en)} · ${n}/${s.chapters.length} पूरे</small><div class="meter"><i style="width:${n/s.chapters.length*100}%"></i></div></button>`}
     function row(s,c,i){return `<button class="row" style="${style(s)}" onclick="openLesson('${s.id}',${i})"><span class="num">${String(i+1).padStart(2,'0')}</span><span class="detail"><strong>${esc(c.title)}</strong><small>${progress[key(s,i)]?'<span class="done">✓ पूरा किया</span>':'पाठ और एक सवाल'}</small></span><span class="arrow">›</span></button>`}
     function searchResults(){let q=query.trim().toLocaleLowerCase();if(!q)return `<div class="section"><h2>सभी विषय</h2><span>${all().length} विषय</span></div><div class="grid">${all().map(card).join('')}</div>`;let hits=all().flatMap(s=>s.chapters.map((c,i)=>({s,c,i}))).filter(x=>(x.s.name+' '+x.s.en+' '+x.c.title+' '+x.c.lead).toLocaleLowerCase().includes(q));return `<div class="section"><h2>खोज परिणाम</h2><span>${hits.length} पाठ</span></div><div class="list">${hits.map(x=>row(x.s,x.c,x.i)).join('')||'<div class="empty">कोई पाठ नहीं मिला। दूसरा शब्द लिखें।</div>'}</div>`}
@@ -49,15 +51,18 @@
       let s=selected(),c=s.chapters[lessonIndex];html=head(`पाठ ${lessonIndex+1}`,`${s.name} · कक्षा ${grade}`,true)+`<main style="${style(s)}"><article class="lesson-head"><span class="badge">${esc(s.name)}</span><h2>${esc(c.title)}</h2><p>${esc(c.lead)}</p></article><div class="section"><h2>याद रखें</h2></div>${c.points.map(p=>`<div class="point"><b>✓</b><span>${esc(p)}</span></div>`).join('')}<section class="activity"><h2>अब आपकी बारी!</h2><p>${esc(c.q)}</p><div id="options">${c.options.map((o,i)=>`<button class="answer" onclick="answer(${i})">${esc(o)}</button>`).join('')}</div><div id="feedback" aria-live="polite"></div></section></main>`+nav('subjects');
     }else if(page==='progress'){
       html=head(`कक्षा ${grade} की प्रगति`,'सही उत्तर देकर पाठ पूरे करें।',false)+`<main><div class="summary"><div><strong>${finished()}/${total()}</strong><p>पाठ पूरे किए</p></div><div class="ring" style="--progress:${percent()}%"><span>${percent()}%</span></div></div><div class="section"><h2>विषय अनुसार</h2></div><div class="list">${all().map(s=>`<button class="row" style="${style(s)}" onclick="openSubject('${s.id}')"><span class="icon">${esc(s.icon)}</span><span class="detail"><strong>${esc(s.name)}</strong><small>${count(s)}/${s.chapters.length} पूरे</small><div class="meter"><i style="width:${count(s)/s.chapters.length*100}%"></i></div></span><span class="arrow">›</span></button>`).join('')}</div></main>`+nav('progress');
+    }else if(page==='board'){html=renderBoardHome()+nav('board')
+    }else if(page==='board-test'){html=renderBoardTest()
+    }else if(page==='board-result'){html=renderBoardResult()+nav('board')
     }app.innerHTML=`<div class="shell">${html}</div>`;window.scrollTo(0,0)}
-    function chooseGrade(n){grade=n;query='';page='home';render()}
+    function chooseGrade(n){if(window.boardStop)boardStop();grade=n;query='';page='home';render()}
     function search(value){query=value;document.getElementById('results').innerHTML=searchResults()}
-    function openHome(){page='home';render()}function openSubjects(){page='subjects';render()}function openProgress(){page='progress';render()}
+    function openHome(){if(window.boardStop)boardStop();page='home';render()}function openSubjects(){if(window.boardStop)boardStop();page='subjects';render()}function openProgress(){if(window.boardStop)boardStop();page='progress';render()}
     function openSubject(id){subjectId=id;page='subject';render()}function openLesson(id,i){subjectId=id;lessonIndex=i;page='lesson';render()}
     function answer(i){let s=selected(),c=s.chapters[lessonIndex],buttons=document.querySelectorAll('#options button');buttons.forEach((b,n)=>{b.disabled=true;if(n===c.answer)b.classList.add('correct');else if(n===i)b.classList.add('wrong')});let good=i===c.answer;document.getElementById('feedback').innerHTML=`<div class="feedback"><strong>${good?'बहुत बढ़िया! सही जवाब 🎉':'एक बार फिर कोशिश करें'}</strong><br>${esc(c.why)}<br>${good?`<button class="next" onclick="nextLesson()">${lessonIndex<s.chapters.length-1?'अगला पाठ':'विषय पर लौटें'} ›</button>`:'<button class="next" onclick="retry()">फिर से जवाब दें</button>'}</div>`;if(good){progress[key(s,lessonIndex)]=true;try{localStorage.setItem('class910-progress',JSON.stringify(progress))}catch(e){}}}
     function retry(){let c=selected().chapters[lessonIndex];document.getElementById('options').innerHTML=c.options.map((o,i)=>`<button class="answer" onclick="answer(${i})">${esc(o)}</button>`).join('');document.getElementById('feedback').innerHTML=''}
     function nextLesson(){let s=selected();if(lessonIndex<s.chapters.length-1){lessonIndex++;render()}else{page='subject';render()}}
-    function goBack(){if(page==='lesson'){page='subject';render();return true}if(page==='subject'){page='subjects';render();return true}if(page!=='home'){page='home';render();return true}return false}
+    function goBack(){if(page==='board-test'){if(confirm('टेस्ट छोड़कर बाहर जाएँ? उत्तर सेव नहीं होंगे।'))openBoard();return true}if(page==='board-result'){openBoard();return true}if(page==='lesson'){page='subject';render();return true}if(page==='subject'){page='subjects';render();return true}if(page!=='home'){page='home';render();return true}return false}
     render();
   </script>
 </body>

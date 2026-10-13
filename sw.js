@@ -1,11 +1,11 @@
 // Kaksha Saathi offline support: caches the homepage and every lesson file on first visit,
 // so the site and online lessons keep working without internet afterwards.
-const VERSION = 'kaksha-v1';
+const VERSION = 'kaksha-v2';
 const FILES = [
   './', './index.html', './manifest.json', './icon.svg',
   './learn/', './learn/index.html', './learn/primary.js', './learn/class8-core.js', './learn/class8-english.js',
   './learn/grades3-5.js', './learn/grades6-8.js', './learn/more-lessons-primary.js', './learn/more-lessons-upper.js',
-  './learn910/', './learn910/index.html', './learn910/config.js', './learn910/content.js'
+  './learn910/', './learn910/index.html', './learn910/config.js', './learn910/content.js', './learn910/board10.js', './learn910/board.js'
 ];
 
 self.addEventListener('install', event => {

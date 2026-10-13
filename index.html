@@ -67,6 +67,7 @@ footer a{color:#184e48}
       <div><span>📶</span><b>बिना इंटरनेट</b><p>एक बार डाउनलोड करें, फिर गाँव में भी बिना नेट पढ़ें।</p></div>
       <div><span>🇮🇳</span><b>हिंदी में</b><p>सरल हिंदी में समझाए गए पाठ, अंग्रेज़ी भी साथ में।</p></div>
       <div><span>✅</span><b>अभ्यास और प्रगति</b><p>हर पाठ के बाद सवाल, और पूरे किए पाठों का हिसाब।</p></div>
+      <div><span>📝</span><b>कक्षा 10 बोर्ड टेस्ट</b><p>बिहार बोर्ड जैसे 120 वस्तुनिष्ठ प्रश्न, मॉडल पेपर, टाइमर और अंक।</p></div>
       <div><span>📱</span><b>हर फ़ोन पर</b><p>Android 6 और उससे नए सस्ते फ़ोन पर भी चलता है।</p></div>
     </div>
   </section>
@@ -127,12 +128,12 @@ const apps=[
   ...[1,2,3,4,5,6,7,8].map(n=>({name:`कक्षा ${n} साथी`,tag:`कक्षा ${n}`,grade:n,
     desc:n<=2?'हिंदी, अंग्रेज़ी, गणित':n<=5?'हिंदी, अंग्रेज़ी, गणित, पर्यावरण अध्ययन':'हिंदी, अंग्रेज़ी, गणित, विज्ञान, सामाजिक विज्ञान, संस्कृत',
     file:`bihar-class-${n}-all-subjects.apk`,size:71,color:n<=2?'#3E9A7B':n<=5?'#5B7FD1':'#C08A2E'})),
-  {name:'कक्षा 9 साथी',tag:'कक्षा 9',grade:9,learn:'learn910/?grade=9',desc:'गणित, विज्ञान, सामाजिक विज्ञान, हिंदी, अंग्रेज़ी, संस्कृत',file:'class-9-all-subjects.apk',size:32,color:'#B0546E'},
-  {name:'कक्षा 10 साथी',tag:'कक्षा 10 · बोर्ड',grade:10,learn:'learn910/?grade=10',desc:'मैट्रिक के मुख्य विषयों का छोटा दोहराव और अभ्यास प्रश्न।',file:'class-10-all-subjects.apk',size:32,color:'#B0546E'},
+  {name:'कक्षा 9 साथी',tag:'कक्षा 9',grade:9,learn:'learn910/?grade=9',desc:'गणित, विज्ञान, सामाजिक विज्ञान, हिंदी, अंग्रेज़ी, संस्कृत',file:'class-9-all-subjects.apk',size:47,color:'#B0546E'},
+  {name:'कक्षा 10 साथी',tag:'कक्षा 10 · बोर्ड',grade:10,learn:'learn910/?grade=10',desc:'मैट्रिक के मुख्य विषयों का दोहराव + 📝 बोर्ड टेस्ट: 120 वस्तुनिष्ठ प्रश्न, मॉडल पेपर, टाइमर और अंक।',file:'class-10-all-subjects.apk',size:47,color:'#B0546E'},
   {name:'कक्षा 3–5 साथी',tag:'कक्षा 3, 4, 5 एक साथ',desc:'तीनों कक्षाएँ एक ही ऐप में – भाई-बहनों के लिए बढ़िया।',file:'class-3-4-5-all-subjects.apk',size:34,color:'#7A5BD1'},
-  {name:'कक्षा 9–10 साथी',tag:'कक्षा 9 और 10 एक साथ',desc:'दोनों कक्षाएँ एक ही ऐप में।',file:'class-9-10-all-subjects.apk',size:32,color:'#7A5BD1'}
+  {name:'कक्षा 9–10 साथी',tag:'कक्षा 9 और 10 एक साथ',desc:'दोनों कक्षाएँ एक ही ऐप में, कक्षा 10 बोर्ड टेस्ट के साथ।',file:'class-9-10-all-subjects.apk',size:47,color:'#7A5BD1'}
 ];
-const REL='https://github.com/sanjay289/kaksha-saathi/releases/download/v1.0/';
+const REL='https://github.com/sanjay289/kaksha-saathi/releases/download/v1.1/';
 const card=a=>`<article class="card" style="--c:${a.color};--t:${a.color}1f"><span class="tag">${a.tag}</span><h3>${a.name}</h3><p>${a.desc}</p><small>APK · ${a.size} KB · Android 6+</small><div class="actions"><a class="btn green" href="${REL}${a.file}">⬇ डाउनलोड</a>${a.grade?`<a class="btn light" href="${a.learn||'learn/?grade='+a.grade}">📖 ऑनलाइन</a>`:''}</div></article>`;
 document.getElementById('appGrid').innerHTML=apps.map(card).join('');
 document.getElementById('learnGrid').innerHTML=apps.filter(a=>a.grade).map(a=>`<article class="card" style="--c:${a.color};--t:${a.color}1f"><span class="tag">${a.tag}</span><h3>कक्षा ${a.grade}</h3><p>${a.desc}</p><div class="actions"><a class="btn green" href="${a.learn||'learn/?grade='+a.grade}">पढ़ना शुरू करें ›</a></div></article>`).join('');
