@@ -9,6 +9,7 @@
     {id:'english',name:'अंग्रेज़ी',icon:'A',color:'#7A5BD1'},
     {id:'sanskrit',name:'संस्कृत',icon:'ॐ',color:'#B0546E'}
   ];
+  const SUBJECT_Q=25, MIXED_PER_SUBJECT=8; // subject test: 25 random of 50; model paper: 6 x 8 = 48 + 2 extra = 50
   const LETTERS=['A','B','C','D'];
   const SEC_PER_Q=72; // ~1.2 min per objective question
   const BEST_KEY='class10-board-best';
@@ -27,18 +28,23 @@
   function header(title,desc){return `<header class="hero"><div class="headrow"><button class="back" aria-label="वापस जाएँ" onclick="goBack()">‹</button><h1>${esc(title)}</h1></div><p>${esc(desc)}</p></header>`}
 
   window.renderBoardHome=function(){
-    const cards=SUBJECTS.map(s=>{const n=boardBank[s.id].length,b=best[s.id];return `<button class="row" style="--accent:${s.color};--tint:${s.color}20" onclick="startBoardTest('${s.id}')"><span class="icon">${s.icon}</span><span class="detail"><strong>${s.name}</strong><small>${n} प्रश्न · ${Math.round(n*SEC_PER_Q/60)} मिनट${b!=null?` · <span class="done">सर्वश्रेष्ठ ${b}%</span>`:''}</small></span><span class="arrow">›</span></button>`}).join('');
+    const cards=SUBJECTS.map(s=>{const n=boardBank[s.id].length,b=best[s.id];return `<button class="row" style="--accent:${s.color};--tint:${s.color}20" onclick="startBoardTest('${s.id}')"><span class="icon">${s.icon}</span><span class="detail"><strong>${s.name}</strong><small>${SUBJECT_Q} प्रश्न (${n} में से) · ${Math.round(SUBJECT_Q*SEC_PER_Q/60)} मिनट${b!=null?` · <span class="done">सर्वश्रेष्ठ ${b}%</span>`:''}</small></span><span class="arrow">›</span></button>`}).join('');
     const mb=best.mixed;
     return `<header class="hero"><div class="eyebrow">मैट्रिक परीक्षा अभ्यास</div><h1>बोर्ड टेस्ट</h1><p>बिहार बोर्ड जैसे वस्तुनिष्ठ प्रश्न: हर प्रश्न 1 अंक, कोई ऋणात्मक अंकन नहीं।</p></header><main>
-      <div class="intro"><span class="intro-icon">📝</span><div><strong>मॉडल पेपर</strong><p>सभी विषयों से मिले-जुले 30 प्रश्न, 36 मिनट।${mb!=null?` सर्वश्रेष्ठ: ${mb}%`:''}</p><button class="next" onclick="startBoardTest('mixed')">मॉडल पेपर शुरू करें ›</button></div></div>
-      <div class="section"><h2>विषयवार टेस्ट</h2><span>${SUBJECTS.length} विषय</span></div><div class="list">${cards}</div>
+      <div class="intro"><span class="intro-icon">📝</span><div><strong>मॉडल पेपर</strong><p>सभी 6 विषयों से 50 प्रश्न, 60 मिनट, बिल्कुल बोर्ड के वस्तुनिष्ठ खंड जैसा। हर बार नए प्रश्न।${mb!=null?` सर्वश्रेष्ठ: ${mb}%`:''}</p><button class="next" onclick="startBoardTest('mixed')">मॉडल पेपर शुरू करें ›</button></div></div>
+      <div class="section"><h2>विषयवार टेस्ट</h2><span>${Object.values(boardBank).reduce((n,a)=>n+a.length,0)} प्रश्न बैंक</span></div><div class="list">${cards}</div>
       <p class="note">ये मूल अभ्यास प्रश्न हैं, असली बोर्ड प्रश्नपत्र नहीं। परीक्षा में 100 में से 50 (या 80 में से 40) वस्तुनिष्ठ प्रश्न करने होते हैं; बाकी अंक लघु और दीर्घ उत्तरीय प्रश्नों से आते हैं।</p></main>`;
   };
 
   window.startBoardTest=function(id){
     let qs;
-    if(id==='mixed'){qs=shuffle(SUBJECTS.flatMap(s=>shuffle(boardBank[s.id]).slice(0,5).map(x=>({...x,sid:s.id}))))}
-    else qs=shuffle(boardBank[id].map(x=>({...x,sid:id})));
+    if(id==='mixed'){
+      const picks=SUBJECTS.map(s=>shuffle(boardBank[s.id]).map(x=>({...x,sid:s.id})));
+      let pool=picks.flatMap(p=>p.slice(0,MIXED_PER_SUBJECT));
+      const extra=shuffle(picks.flatMap(p=>p.slice(MIXED_PER_SUBJECT))).slice(0,50-pool.length);
+      qs=shuffle(pool.concat(extra));
+    }
+    else qs=shuffle(boardBank[id].map(x=>({...x,sid:id}))).slice(0,SUBJECT_Q);
     qs=qs.map(mixOptions);
     T={id,qs,ans:new Array(qs.length).fill(-1),i:0,left:qs.length*SEC_PER_Q,done:false};
     boardStop();timer=setInterval(()=>{if(!T||T.done)return boardStop();T.left--;const el=document.getElementById('board-timer');if(el)el.textContent='⏱ '+fmt(T.left);if(T.left<=0)submitBoardTest(true)},1000);
